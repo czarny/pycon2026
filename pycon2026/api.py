@@ -21,11 +21,12 @@ from pycon2026.trust_store import TrustStore
 
 class Api(Construct):
     rest_api: apigateway.RestApi
+    trust_store: TrustStore
 
     def __init__(self, scope: Construct, id: str, zone: route53.IHostedZone) -> None:
         super().__init__(scope, id)
 
-        trust_store = TrustStore(self, "TrustStore")
+        self.trust_store = TrustStore(self, "TrustStore")
 
         self.rest_api = apigateway.RestApi(
             self,
@@ -35,7 +36,7 @@ class Api(Construct):
             endpoint_types=[apigateway.EndpointType.REGIONAL],
             deploy_options=apigateway.StageOptions(
                 # Presented to every backend on integration requests.
-                client_certificate_id=trust_store.client_certificate_id,
+                client_certificate_id=self.trust_store.client_certificate_id,
             ),
         )
 
@@ -62,6 +63,16 @@ class Api(Construct):
     def add_http_proxy(self, path: str, backend_url: str) -> apigateway.Resource:
         """Mount `backend_url` at `path`, proxying every method and sub-path to it."""
         resource = self.rest_api.root.resource_for_path(path)
+        # `{proxy+}` below matches sub-paths only, so the mount point itself
+        # needs its own method, integrated with the backend's root.
+        resource.add_method(
+            "ANY",
+            apigateway.HttpIntegration(
+                backend_url,
+                http_method="ANY",
+                proxy=True,
+            ),
+        )
         resource.add_proxy(
             any_method=True,
             default_integration=apigateway.HttpIntegration(
@@ -79,4 +90,3 @@ class Api(Construct):
             ),
         )
         return resource
-

@@ -62,9 +62,10 @@ def handler(event, context):
 class TrustStore(Construct):
     #: The certificate API Gateway presents to backends, verified against the bundle.
     client_certificate_id: str
-    #: Bucket, key and object version as one string: s3://<bucket>/<key>@<version>.
-    #: Not a standard S3 URI — the `@<version>` suffix is our own convention, so
-    #: consumers have to split on the last "@" to recover the version id.
+    #: Bucket, key and object version as one string:
+    #: s3://<bucket>/<key>?versionId=<version>. The s3:// scheme has no version
+    #: component of its own, so this borrows the S3 REST API's `versionId` query
+    #: parameter: consumers recover all three parts with urlparse + parse_qs.
     uri: str
 
     def __init__(self, scope: Construct, id: str) -> None:
@@ -129,4 +130,4 @@ class TrustStore(Construct):
         resource.node.add_dependency(bucket)
 
         version = resource.get_att_string("VersionId")
-        self.uri = f"s3://{bucket.bucket_name}/{TRUST_STORE_KEY}@{version}"
+        self.uri = f"s3://{bucket.bucket_name}/{TRUST_STORE_KEY}?versionId={version}"

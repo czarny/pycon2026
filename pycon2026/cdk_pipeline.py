@@ -5,12 +5,16 @@ deploys it with a single CodeBuild `cdk deploy` stage. Supports either a branch
 trigger (push to branch) or a tag trigger (push of a matching tag).
 """
 
+import hashlib
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import Mapping, Optional
 
 from aws_cdk import (
+    Fn,
     RemovalPolicy,
+    Tags,
+    Token,
     aws_codebuild as codebuild,
     aws_codepipeline as codepipeline,
     aws_codepipeline_actions as actions,
@@ -27,7 +31,11 @@ TAG_VERSION_PATTERN = re.compile(r"^v?\d+\.\d+\.\d+$")
 #: Create it once, out of band:
 #:   aws ssm put-parameter --name /pycon2026/connection-arn --type String \
 #:       --value arn:aws:codeconnections:...:connection/<uuid>
-CONNECTION_ARN_PARAMETER = "/pycon2026/connection-arn"
+CONNECTION_ARN_PARAMETER = "/codestar-connection/github-czarny"
+
+#: Build instructions come from the source repo, not from here: CodeBuild reads
+#: this file from the root of the checked-out source artifact.
+BUILDSPEC_FILENAME = "buildspec.yml"
 
 
 @dataclass(frozen=True)
@@ -54,7 +62,13 @@ class CdkPipeline(Construct):
     pipeline: codepipeline.Pipeline
     outputs: PipelineOutputs
 
-    def __init__(self, scope: Construct, id: str, source_code: SourceCode) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        id: str,
+        source_code: SourceCode,
+        environment_variables: Optional[Mapping[str, str]] = None,
+    ) -> None:
         super().__init__(scope, id)
 
         is_tag = bool(TAG_VERSION_PATTERN.match(source_code.revision_selector))
@@ -148,26 +162,11 @@ class CdkPipeline(Construct):
                     ),
                 },
             ),
-            build_spec=codebuild.BuildSpec.from_object(
-                {
-                    "version": "0.2",
-                    "phases": {
-                        "install": {
-                            "runtime-versions": {
-                                "nodejs": 22,
-                            },
-                        },
-                        "build": {
-                            "commands": [
-                                "npm ci",
-                                "npm run build",
-                                "if [ -f cdk/cdk.json ]; then cd cdk; npm ci; fi",
-                                "npx cdk deploy --require-approval=never --verbose",
-                            ],
-                        },
-                    },
-                }
-            ),
+            environment_variables={
+                name: codebuild.BuildEnvironmentVariable(value=value)
+                for name, value in (environment_variables or {}).items()
+            },
+            build_spec=codebuild.BuildSpec.from_source_filename(BUILDSPEC_FILENAME),
         )
 
         self.pipeline.add_stage(
@@ -181,3 +180,22 @@ class CdkPipeline(Construct):
                 ),
             ],
         )
+
+        # Tag the pipeline with one tag per environment variable so that changing a
+        # value counts as a resource update in CloudFormation which — combined with
+        # restart_execution_on_update above — re-runs the pipeline. Neither form of
+        # the value is tagged verbatim: tag values are constrained (IAM in particular
+        # allows only [\p{L}\p{Z}\p{N}_.:/=+\-@], which rules out the `?` in an S3
+        # URI carrying a versionId) and capped in length. Resolved values are hashed;
+        # tokens are base64-encoded at deploy time by CloudFormation, whose alphabet
+        # sits inside every tag charset. Both change when the value does, which is all
+        # the tag is for.
+        for name, value in (environment_variables or {}).items():
+            Tags.of(self.pipeline).add(
+                f"ENV.{name}",
+                (
+                    Fn.base64(value)
+                    if Token.is_unresolved(value)
+                    else hashlib.sha256(value.encode()).hexdigest()
+                ),
+            )
