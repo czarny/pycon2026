@@ -1,5 +1,5 @@
 {
-  "app": "python3 app.py",
+  "app": "uv run python3 app.py",
   "watch": {
     "include": [
       "**"
@@ -7,8 +7,8 @@
     "exclude": [
       "README.md",
       "cdk*.json",
-      "requirements*.txt",
-      "source.bat",
+      "pyproject.toml",
+      "uv.lock",
       "**/__init__.py",
       "**/__pycache__",
       "tests"

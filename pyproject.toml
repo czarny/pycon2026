@@ -1,0 +1,18 @@
+[project]
+name = "pycon2026"
+version = "0.1.0"
+description = "A CDK Python project"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "aws-cdk-lib>=2.265.0,<3.0.0",
+    "constructs>=10.5.0,<11.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest==8.4.2",
+]
+
+[tool.uv]
+package = false
