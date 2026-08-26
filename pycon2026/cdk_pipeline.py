@@ -8,7 +8,7 @@ trigger (push to branch) or a tag trigger (push of a matching tag).
 import hashlib
 import re
 from dataclasses import dataclass
-from typing import Mapping, Optional
+from collections.abc import Mapping
 
 from aws_cdk import (
     Fn,
@@ -49,7 +49,7 @@ class SourceCode:
     #: ARN of the CodeConnections connection granting access to the repo.
     #: Defaults to the value of the CONNECTION_ARN_PARAMETER SSM parameter,
     #: which CloudFormation resolves at deploy time.
-    connection_arn: Optional[str] = None
+    connection_arn: str | None = None
 
 
 @dataclass(frozen=True)
@@ -67,7 +67,7 @@ class CdkPipeline(Construct):
         scope: Construct,
         id: str,
         source_code: SourceCode,
-        environment_variables: Optional[Mapping[str, str]] = None,
+        environment_variables: Mapping[str, str] | None = None,
     ) -> None:
         super().__init__(scope, id)
 
