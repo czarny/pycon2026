@@ -8,6 +8,7 @@ values only this side knows —
   DOMAIN      the domain the service answers on, in our delegated zone
   TRUSTSTORE  the S3 URI of the trust store bundle whose client certificates its
               custom domain accepts, so only our API Gateway can reach it
+              (taken from the TrustStore construct passed in)
 
 Both arrive as CodeBuild environment variables, and a change to either re-runs
 the pipeline (see CdkPipeline), so a rotated trust store is picked up on deploy.
@@ -19,6 +20,7 @@ buildspec.yml at its root.
 from constructs import Construct
 
 from pycon2026.cdk_pipeline import CdkPipeline, SourceCode
+from pycon2026.trust_store import TrustStore
 
 #: The repo holding the application and its CDK app.
 REPO_OWNER = "czarny"
@@ -35,7 +37,7 @@ class FastApp(Construct):
         scope: Construct,
         id: str,
         domain: str,
-        truststore: str,
+        trust_store: TrustStore,
         revision_selector: str = "main",
     ) -> None:
         super().__init__(scope, id)
@@ -52,6 +54,6 @@ class FastApp(Construct):
             ),
             environment_variables={
                 "DOMAIN": domain,
-                "TRUSTSTORE": truststore,
+                "TRUSTSTORE": trust_store.uri,
             },
         )

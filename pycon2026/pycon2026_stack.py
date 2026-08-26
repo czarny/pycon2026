@@ -32,7 +32,7 @@ class Pycon2026Stack(Stack):
             self,
             "FastApp",
             domain=f"fast.{zone.zone_name}",
-            truststore=trust_store.uri,
+            trust_store=trust_store,
         )
         gateway.add_http_proxy("fast", fast_app.url)
 
@@ -40,6 +40,6 @@ class Pycon2026Stack(Stack):
             self,
             "HonoApp",
             domain=f"hono.{zone.zone_name}",
-            truststore=trust_store.uri,
+            trust_store=trust_store,
         )
         gateway.add_http_proxy("hono", hono_app.url)
