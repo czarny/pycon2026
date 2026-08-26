@@ -1,8 +1,9 @@
-"""A REST API that authenticates itself to its HTTP backends with a client certificate.
+"""A REST API that can authenticate itself to its HTTP backends with a client certificate.
 
-Backends are mounted with `add_http_proxy`. Every request API Gateway forwards
-to one carries the trust store's client certificate, so the backend can verify
-the caller by checking it against the trust store bundle.
+Backends are mounted with `add_http_proxy`. When a trust store is passed in,
+every request API Gateway forwards to one carries that trust store's client
+certificate, so the backend can verify the caller by checking it against the
+trust store bundle.
 
 The API is served from the delegated zone's domain name, with a DNS-validated
 certificate and an alias record pointing at it.
@@ -19,14 +20,17 @@ from constructs import Construct
 from pycon2026.trust_store import TrustStore
 
 
-class Api(Construct):
+class Gateway(Construct):
     rest_api: apigateway.RestApi
-    trust_store: TrustStore
 
-    def __init__(self, scope: Construct, id: str, zone: route53.IHostedZone) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        id: str,
+        zone: route53.IHostedZone,
+        trust_store: TrustStore | None = None,
+    ) -> None:
         super().__init__(scope, id)
-
-        self.trust_store = TrustStore(self, "TrustStore")
 
         self.rest_api = apigateway.RestApi(
             self,
@@ -36,7 +40,9 @@ class Api(Construct):
             endpoint_types=[apigateway.EndpointType.REGIONAL],
             deploy_options=apigateway.StageOptions(
                 # Presented to every backend on integration requests.
-                client_certificate_id=self.trust_store.client_certificate_id,
+                client_certificate_id=(
+                    trust_store.client_certificate_id if trust_store else None
+                ),
             ),
         )
 

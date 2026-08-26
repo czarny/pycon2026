@@ -1,10 +1,11 @@
 from aws_cdk import Stack
 from constructs import Construct
 
-from pycon2026.api import Api
 from pycon2026.delegated_hosted_zone import DelegatedHostedZone, ParentZone
 from pycon2026.fast_app import FastApp
+from pycon2026.gateway import Gateway
 from pycon2026.hono_app import HonoApp
+from pycon2026.trust_store import TrustStore
 
 
 class Pycon2026Stack(Stack):
@@ -19,8 +20,10 @@ class Pycon2026Stack(Stack):
             parent=ParentZone(zone_name="pycon.foo"),
         )
 
-        api = Api(self, "Api", zone)
-        api.add_http_proxy("example", "https://example.com")
+        trust_store = TrustStore(self, "TrustStore")
+
+        gateway = Gateway(self, "Gateway", zone, trust_store=trust_store)
+        gateway.add_http_proxy("example", "https://example.com")
 
         # Each deployed by its own pipeline, on its own subdomain of the
         # delegated zone, and reachable only through this API — their custom
@@ -29,14 +32,14 @@ class Pycon2026Stack(Stack):
             self,
             "FastApp",
             domain=f"fast.{zone.zone_name}",
-            truststore=api.trust_store.uri,
+            truststore=trust_store.uri,
         )
-        api.add_http_proxy("fast", fast_app.url)
+        gateway.add_http_proxy("fast", fast_app.url)
 
         hono_app = HonoApp(
             self,
             "HonoApp",
             domain=f"hono.{zone.zone_name}",
-            truststore=api.trust_store.uri,
+            truststore=trust_store.uri,
         )
-        api.add_http_proxy("hono", hono_app.url)
+        gateway.add_http_proxy("hono", hono_app.url)
