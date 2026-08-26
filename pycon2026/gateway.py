@@ -5,8 +5,9 @@ every request API Gateway forwards to one carries that trust store's client
 certificate, so the backend can verify the caller by checking it against the
 trust store bundle.
 
-The API is served from the delegated zone's domain name, with a DNS-validated
-certificate and an alias record pointing at it.
+When a hosted zone is passed in, the API is served from that zone's domain
+name, with a DNS-validated certificate and an alias record pointing at it;
+otherwise it is only reachable on its execute-api URL.
 """
 
 from aws_cdk import (
@@ -27,7 +28,7 @@ class Gateway(Construct):
         self,
         scope: Construct,
         id: str,
-        zone: route53.IHostedZone,
+        zone: route53.IHostedZone | None = None,
         trust_store: TrustStore | None = None,
     ) -> None:
         super().__init__(scope, id)
@@ -46,25 +47,26 @@ class Gateway(Construct):
             ),
         )
 
-        domain = self.rest_api.add_domain_name(
-            "DomainName",
-            domain_name=zone.zone_name,
-            certificate=acm.Certificate(
-                self,
-                "Certificate",
+        if zone is not None:
+            domain = self.rest_api.add_domain_name(
+                "DomainName",
                 domain_name=zone.zone_name,
-                validation=acm.CertificateValidation.from_dns(zone),
-            ),
-            endpoint_type=apigateway.EndpointType.REGIONAL,
-        )
-        route53.ARecord(
-            self,
-            "AliasRecord",
-            zone=zone,
-            target=route53.RecordTarget.from_alias(
-                route53_targets.ApiGatewayDomain(domain)
-            ),
-        )
+                certificate=acm.Certificate(
+                    self,
+                    "Certificate",
+                    domain_name=zone.zone_name,
+                    validation=acm.CertificateValidation.from_dns(zone),
+                ),
+                endpoint_type=apigateway.EndpointType.REGIONAL,
+            )
+            route53.ARecord(
+                self,
+                "AliasRecord",
+                zone=zone,
+                target=route53.RecordTarget.from_alias(
+                    route53_targets.ApiGatewayDomain(domain)
+                ),
+            )
 
     def add_http_proxy(self, path: str, backend_url: str) -> apigateway.Resource:
         """Mount `backend_url` at `path`, proxying every method and sub-path to it."""
