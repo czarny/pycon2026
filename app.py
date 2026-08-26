@@ -3,10 +3,10 @@ import os
 
 import aws_cdk as cdk
 
-from pycon2026.pycon2026_stack import Pycon2026Stack
+from pycon2026.stack import Stack
 
 app = cdk.App()
-Pycon2026Stack(
+Stack(
     app,
     "Pycon2026Stack",
     # If you don't specify 'env', this stack will be environment-agnostic.
