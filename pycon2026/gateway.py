@@ -41,9 +41,7 @@ class Gateway(Construct):
             endpoint_types=[apigateway.EndpointType.REGIONAL],
             deploy_options=apigateway.StageOptions(
                 # Presented to every backend on integration requests.
-                client_certificate_id=(
-                    trust_store.client_certificate_id if trust_store else None
-                ),
+                client_certificate_id=(trust_store.client_certificate_id if trust_store else None),
             ),
         )
 
@@ -63,9 +61,7 @@ class Gateway(Construct):
                 self,
                 "AliasRecord",
                 zone=zone,
-                target=route53.RecordTarget.from_alias(
-                    route53_targets.ApiGatewayDomain(domain)
-                ),
+                target=route53.RecordTarget.from_alias(route53_targets.ApiGatewayDomain(domain)),
             )
 
     def add_http_proxy(self, path: str, backend_url: str) -> apigateway.Resource:

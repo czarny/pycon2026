@@ -38,7 +38,5 @@ class PyconZone(route53.HostedZone):
             "DelegateNsRecord",
             parent_hosted_zone_name=PARENT_ZONE_NAME,
             delegated_zone=self,
-            delegation_role=iam.Role.from_role_arn(
-                self, "DelegationRole", delegation_role_arn
-            ),
+            delegation_role=iam.Role.from_role_arn(self, "DelegationRole", delegation_role_arn),
         )

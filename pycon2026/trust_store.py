@@ -98,8 +98,7 @@ class TrustStore(Construct):
             code=lambda_.Code.from_inline(BUILDER_CODE),
             timeout=Duration.minutes(2),
             description=(
-                "Fetches the API Gateway client certificate PEM and writes it "
-                "to S3 as a trust store bundle"
+                "Fetches the API Gateway client certificate PEM and writes it " "to S3 as a trust store bundle"
             ),
         )
         builder.add_to_role_policy(

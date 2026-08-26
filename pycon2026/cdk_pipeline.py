@@ -81,9 +81,7 @@ class CdkPipeline(Construct):
         source_action = actions.CodeStarConnectionsSourceAction(
             action_name="Source",
             connection_arn=source_code.connection_arn
-            or ssm.StringParameter.value_for_string_parameter(
-                self, CONNECTION_ARN_PARAMETER
-            ),
+            or ssm.StringParameter.value_for_string_parameter(self, CONNECTION_ARN_PARAMETER),
             owner=source_code.owner,
             repo=source_code.repo,
             # For tag triggers, branch is not used for filtering — we use the trigger config.
@@ -109,9 +107,7 @@ class CdkPipeline(Construct):
                             push_filter=[
                                 codepipeline.GitPushFilter(
                                     tags_includes=[source_code.revision_selector],
-                                    tags_excludes=[
-                                        source_code.revision_selector + "-*"
-                                    ],
+                                    tags_excludes=[source_code.revision_selector + "-*"],
                                 ),
                             ],
                         ),
@@ -134,9 +130,7 @@ class CdkPipeline(Construct):
             self,
             "Project",
             logging=codebuild.LoggingOptions(
-                cloud_watch=codebuild.CloudWatchLoggingOptions(
-                    log_group=build_log_group
-                ),
+                cloud_watch=codebuild.CloudWatchLoggingOptions(log_group=build_log_group),
             ),
             environment=codebuild.BuildEnvironment(
                 build_image=codebuild.LinuxBuildImage.AMAZON_LINUX_2023_5,
@@ -193,9 +187,5 @@ class CdkPipeline(Construct):
         for name, value in (environment_variables or {}).items():
             Tags.of(self.pipeline).add(
                 f"ENV.{name}",
-                (
-                    Fn.base64(value)
-                    if Token.is_unresolved(value)
-                    else hashlib.sha256(value.encode()).hexdigest()
-                ),
+                (Fn.base64(value) if Token.is_unresolved(value) else hashlib.sha256(value.encode()).hexdigest()),
             )
