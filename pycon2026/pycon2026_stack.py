@@ -1,10 +1,10 @@
 from aws_cdk import Stack
 from constructs import Construct
 
-from pycon2026.delegated_hosted_zone import DelegatedHostedZone, ParentZone
 from pycon2026.fast_app import FastApp
 from pycon2026.gateway import Gateway
 from pycon2026.hono_app import HonoApp
+from pycon2026.pycon_zone import PyconZone
 from pycon2026.trust_store import TrustStore
 
 
@@ -13,12 +13,7 @@ class Pycon2026Stack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        zone = DelegatedHostedZone(
-            self,
-            "DelegatedZone",
-            record_name="czarny",
-            parent=ParentZone(zone_name="pycon.foo"),
-        )
+        zone = PyconZone(self, "DelegatedZone", record_name="czarny")
 
         trust_store = TrustStore(self, "TrustStore")
 
