@@ -53,7 +53,6 @@ flowchart TB
 
 Tak wygląda przykładowy fragment drzewa konstruktów CDK. Z pozycji konstruktu w drzewie (np. `Pycon2026Stack/TrustStore/Bucket`) CDK wyprowadza **logical ID** zasobu w CloudFormation: sklejone elementy ścieżki bez nazwy stacka, plus hash — `TrustStoreBucket1FDD8F29`.
 
-> [!IMPORTANT]
 > Zmiana `id` konstruktu zmienia logical ID, a CloudFormation widzi wtedy usunięcie starego zasobu i utworzenie nowego.
 
 ### Trzy poziomy konstruktów
