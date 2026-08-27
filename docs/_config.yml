@@ -1,6 +1,6 @@
 title: CDK Python Workshop
 description: Building a multi-service AWS platform with CDK
-theme: jekyll-theme-hacker
+theme: jekyll-theme-midnight
 
 # The docs are the site; nothing else in this folder should be published.
 exclude:
