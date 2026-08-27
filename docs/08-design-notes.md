@@ -1,5 +1,7 @@
 # 08 — Design notes
 
+← [07 — Assemble and deploy](07-assemble-and-deploy.md)  ·  [Index](README.md) →
+
 Why the constructs look the way they do. Each note is a decision you can carry
 back to your own CDK codebase.
 
@@ -105,4 +107,6 @@ otherwise "simplify" away.
 * **Publish your constructs.** `TrustStore` and `CdkPipeline` are useful beyond
   this repo.
 
-← [Back to the index](README.md)
+---
+
+← [07 — Assemble and deploy](07-assemble-and-deploy.md)  ·  [Index](README.md) →

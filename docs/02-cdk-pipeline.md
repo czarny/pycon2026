@@ -1,5 +1,7 @@
 # 02 — The `CdkPipeline` construct
 
+← [01 — Initialise the project](01-init-project.md)  ·  [03 — The TrustStore construct](03-trust-store.md) →
+
 **Goal:** a reusable construct that stands up a CodePipeline which checks out a
 GitHub repository and deploys it with a single `cdk deploy` CodeBuild stage.
 
@@ -21,7 +23,6 @@ class SourceCode:
     #: Either a branch name or a tag (matched against TAG_VERSION_PATTERN).
     revision_selector: str
     connection_arn: str | None = None
-
 
 class CdkPipeline(Construct):
     pipeline: codepipeline.Pipeline
@@ -127,4 +128,6 @@ $ uv run python -c "from pycon2026.cdk_pipeline import CdkPipeline; print('ok')"
 $ npx aws-cdk synth
 ```
 
-→ [03 — The TrustStore construct](03-trust-store.md)
+---
+
+← [01 — Initialise the project](01-init-project.md)  ·  [03 — The TrustStore construct](03-trust-store.md) →

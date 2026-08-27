@@ -1,5 +1,7 @@
 # 05 — The `Gateway` construct
 
+← [04 — The PyconZone construct](04-delegated-zone.md)  ·  [06 — The app services](06-app-services.md) →
+
 **Goal:** a REST API on your delegated domain, with an ACM certificate and an
 alias record, that proxies paths to HTTP backends and authenticates itself to
 them with the trust store's client certificate.
@@ -154,4 +156,6 @@ for lid, r in t['Resources'].items():
 
 Expect `example` and a `{proxy+}` beneath it.
 
-→ [06 — The app services](06-app-services.md)
+---
+
+← [04 — The PyconZone construct](04-delegated-zone.md)  ·  [06 — The app services](06-app-services.md) →

@@ -1,5 +1,7 @@
 # 04 — The `PyconZone` construct
 
+← [03 — The TrustStore construct](03-trust-store.md)  ·  [05 — The Gateway construct](05-gateway.md) →
+
 **Goal:** own `<you>.pycon.foo` in your account, with the NS delegation written
 into the parent zone — in a different account — as part of the deploy.
 
@@ -22,7 +24,6 @@ for exactly that one write. CDK wraps it as
 PARENT_ZONE_NAME = "pycon.foo"
 PARENT_ACCOUNT_ID = "097446187891"
 DELEGATION_ROLE_NAME = "CrossAccountZoneDelegationRole"
-
 
 class PyconZone(route53.HostedZone):
     """A subdomain of pycon.foo, delegated to this account."""
@@ -99,4 +100,6 @@ After the deploy in step 07, `dig +short NS <you>.pycon.foo @8.8.8.8` confirms
 the delegation really took. Empty means either the deploy has not run or the
 parent account's role does not trust yours.
 
-→ [05 — The Gateway construct](05-gateway.md)
+---
+
+← [03 — The TrustStore construct](03-trust-store.md)  ·  [05 — The Gateway construct](05-gateway.md) →

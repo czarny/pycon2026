@@ -1,5 +1,7 @@
 # 01 — Initialise the project
 
+← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The CdkPipeline construct](02-cdk-pipeline.md) →
+
 **Goal:** an empty CDK Python project, managed by uv, formatted by black, that
 synthesizes.
 
@@ -73,7 +75,6 @@ never run against a stale virtualenv. You never activate `.venv`. Commit
 import aws_cdk as cdk
 from constructs import Construct
 
-
 class Stack(cdk.Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
@@ -99,4 +100,6 @@ CloudFormation ever sees; everything from here on is a program that prints it.
 
 `cdk.out/` is gitignored: synthesized output is a build artifact.
 
-→ [02 — The CdkPipeline construct](02-cdk-pipeline.md)
+---
+
+← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The CdkPipeline construct](02-cdk-pipeline.md) →

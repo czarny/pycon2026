@@ -1,5 +1,7 @@
 # 06 — The app services: `FastApp` and `HonoApp`
 
+← [05 — The Gateway construct](05-gateway.md)  ·  [07 — Assemble and deploy](07-assemble-and-deploy.md) →
+
 **Goal:** two service constructs, each standing up a pipeline that deploys a
 *different repository's* CDK app, handed the domain and the trust store from
 this side.
@@ -28,7 +30,6 @@ between the platform repo and a service repo — two strings.
 ```python
 REPO_OWNER = "czarny"
 REPO_NAME = "fast_app"
-
 
 class FastApp(Construct):
     #: Base URL of the deployed service, for mounting behind our API.
@@ -134,4 +135,6 @@ for lid, r in t['Resources'].items():
 
 Two pipelines, each tagged `ENV.DOMAIN` and `ENV.TRUSTSTORE`.
 
-→ [07 — Assemble and deploy](07-assemble-and-deploy.md)
+---
+
+← [05 — The Gateway construct](05-gateway.md)  ·  [07 — Assemble and deploy](07-assemble-and-deploy.md) →

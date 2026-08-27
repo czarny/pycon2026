@@ -1,5 +1,7 @@
 # 07 — Assemble and deploy
 
+← [06 — The app services](06-app-services.md)  ·  [08 — Design notes](08-design-notes.md) →
+
 **Goal:** wire the five constructs into one stack, synthesize it, deploy it, and
 prove it works end to end.
 
@@ -140,4 +142,6 @@ both settings chosen for exactly this moment. The two *service* stacks were
 deployed by the pipelines, not by this stack, so destroy them from their own
 repositories.
 
-→ [08 — Design notes](08-design-notes.md)
+---
+
+← [06 — The app services](06-app-services.md)  ·  [08 — Design notes](08-design-notes.md) →

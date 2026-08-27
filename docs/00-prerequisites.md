@@ -1,5 +1,7 @@
 # 00 — Prerequisites
 
+← [Index](README.md)  ·  [01 — Initialise the project](01-init-project.md) →
+
 ## Tools
 
 | Tool | Install |
@@ -61,4 +63,6 @@ The parameter name is `CONNECTION_ARN_PARAMETER` in
 Replace `czarny` throughout with your own identifier. It becomes your subdomain
 (`<you>.pycon.foo`) and your GitHub org for the two service repositories.
 
-→ [01 — Initialise the project](01-init-project.md)
+---
+
+← [Index](README.md)  ·  [01 — Initialise the project](01-init-project.md) →

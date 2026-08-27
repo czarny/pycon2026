@@ -1,5 +1,7 @@
 # 03 — The `TrustStore` construct
 
+← [02 — The CdkPipeline construct](02-cdk-pipeline.md)  ·  [04 — The PyconZone construct](04-delegated-zone.md) →
+
 **Goal:** an API Gateway client certificate, published to S3 as a PEM bundle
 that backend services point their mTLS trust store at — and that rotates itself
 every six months.
@@ -156,4 +158,6 @@ Note how much a two-line `cr.Provider` expands into — a framework Lambda, its
 role, its log group. There are three `AWS::Lambda::Function`s here for one
 handler you wrote.
 
-→ [04 — The PyconZone construct](04-delegated-zone.md)
+---
+
+← [02 — The CdkPipeline construct](02-cdk-pipeline.md)  ·  [04 — The PyconZone construct](04-delegated-zone.md) →
