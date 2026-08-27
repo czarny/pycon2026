@@ -70,7 +70,6 @@ Czego się tu **nie** dostaje:
 - **Spokoju z certyfikatami.** Certyfikat klienta wygasa po roku; trzeba go rotować, odświeżyć trust store i wdrożyć serwisy na nowo.
 - **Zgodności na papierze.** Niektóre regulacje wymagają prywatnej sieci niezależnie od kryptografii.
 
-> [!IMPORTANT]
 > Serwis musi mieć wyłączony domyślny adres `execute-api`. Na nim mTLS nie działa, więc byłby tylnym wejściem obok pilnowanej domeny.
 
 ## 4. mTLS w pigułce
