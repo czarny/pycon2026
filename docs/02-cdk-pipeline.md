@@ -125,7 +125,7 @@ Nothing instantiates `CdkPipeline` yet, so the template is unchanged:
 
 ```
 $ uv run python -c "from pycon2026.cdk_pipeline import CdkPipeline; print('ok')"
-$ npx aws-cdk synth
+$ npx cdk synth
 ```
 
 ---

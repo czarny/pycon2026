@@ -8,14 +8,18 @@
 |------|---------|
 | [uv](https://docs.astral.sh/uv/) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
 | Node.js 18+ | [nodejs.org](https://nodejs.org) |
-| AWS CDK CLI | `npm install -g aws-cdk` — or prefix every command with `npx aws-cdk` |
+| AWS CDK CLI | `npm install -g aws-cdk` — or prefix every command with `npx cdk` |
 | AWS CLI v2 | [docs](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) |
+
+The package is named `aws-cdk`; the command it installs is `cdk`. AWS also
+publishes `cdk` as an alias package, which is what `npx cdk` fetches — same
+version, same binary.
 
 uv installs Python 3.12 for you. Check everything:
 
 ```
 $ uv --version
-$ npx aws-cdk --version
+$ npx cdk --version
 $ aws sts get-caller-identity
 ```
 
@@ -25,7 +29,7 @@ Steps 01–06 only synthesize CloudFormation and need no credentials. Step 07
 deploys, and needs an account that has been bootstrapped:
 
 ```
-$ npx aws-cdk bootstrap aws://<account-id>/<region>
+$ npx cdk bootstrap aws://<account-id>/<region>
 ```
 
 ### The parent hosted zone

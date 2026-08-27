@@ -145,7 +145,7 @@ before any of your own services exist.
 ## 5.5 Verify
 
 ```
-$ npx aws-cdk synth
+$ npx cdk synth
 $ uv run python -c "
 import json
 t = json.load(open('cdk.out/Pycon2026Stack.template.json'))

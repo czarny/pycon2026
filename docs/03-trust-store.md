@@ -147,7 +147,7 @@ redeploys.
 Instantiate it temporarily in the stack (`TrustStore(self, "TrustStore")`), then:
 
 ```
-$ npx aws-cdk synth
+$ npx cdk synth
 $ uv run python -c "
 import json
 t = json.load(open('cdk.out/Pycon2026Stack.template.json'))

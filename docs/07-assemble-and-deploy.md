@@ -61,7 +61,7 @@ service is not deployed yet".
 ```
 $ uv run black --check .
 $ uv run pytest
-$ npx aws-cdk synth
+$ npx cdk synth
 ```
 
 Those 30 lines produce 66 resources:
@@ -86,8 +86,8 @@ what you expected.
 You need credentials now, and a bootstrapped account.
 
 ```
-$ npx aws-cdk diff
-$ npx aws-cdk deploy
+$ npx cdk diff
+$ npx cdk deploy
 ```
 
 Roughly in order:
@@ -134,7 +134,7 @@ side has not picked up `TRUSTSTORE`.
 ## 7.5 Tear down
 
 ```
-$ npx aws-cdk destroy
+$ npx cdk destroy
 ```
 
 The trust store bucket empties itself and the log groups go with the stack —

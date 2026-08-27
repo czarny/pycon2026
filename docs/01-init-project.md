@@ -12,7 +12,7 @@ name.
 
 ```
 $ mkdir pycon2026 && cd pycon2026
-$ npx aws-cdk init app --language python
+$ npx cdk init app --language python
 ```
 
 Two generated files carry the wiring:
@@ -91,7 +91,7 @@ alone, since that is the CloudFormation stack name.
 ```
 $ uv run black .
 $ uv run pytest
-$ npx aws-cdk synth
+$ npx cdk synth
 ```
 
 Open `cdk.out/Pycon2026Stack.template.json`. An empty stack is not empty — it
