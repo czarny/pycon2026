@@ -2,8 +2,7 @@
 
 ← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The CdkPipeline construct](02-cdk-pipeline.md) →
 
-**Goal:** an empty CDK Python project, managed by uv, formatted by black, that
-synthesizes.
+**Goal:** an empty CDK Python project, managed by uv, that synthesizes.
 
 ## 1.1 Scaffold
 
@@ -33,7 +32,7 @@ $ echo "3.12" > .python-version
 
 $ uv init --bare
 $ uv add "aws-cdk-lib>=2.265.0,<3.0.0" "constructs>=10.5.0,<11.0.0"
-$ uv add --dev "pytest==8.4.2" "black>=26.5.1"
+$ uv add --dev "pytest==8.4.2"
 ```
 
 Both caps matter: a major bump of either package is a breaking change. And
@@ -48,10 +47,6 @@ requires-python = ">=3.10"
 
 [tool.uv]
 package = false          # an app, not a distributable library
-
-[tool.black]
-line-length = 120        # CDK code nests deeply; 88 is too narrow
-target-version = ["py312"]
 ```
 
 Point the CDK CLI at uv, in `cdk.json`:
@@ -63,8 +58,7 @@ Point the CDK CLI at uv, in `cdk.json`:
 ```
 
 `uv run` re-syncs the environment before every invocation, so `cdk synth` can
-never run against a stale virtualenv. You never activate `.venv`. Commit
-`uv.lock`.
+never run against a stale virtualenv. You never activate `.venv`.
 
 ## 1.3 Trim the generated stack
 
@@ -89,7 +83,6 @@ alone, since that is the CloudFormation stack name.
 ## 1.4 Verify
 
 ```
-$ uv run black .
 $ uv run pytest
 $ npx cdk synth
 ```

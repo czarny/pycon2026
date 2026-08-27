@@ -59,7 +59,6 @@ service is not deployed yet".
 ## 7.2 Synth
 
 ```
-$ uv run black --check .
 $ uv run pytest
 $ npx cdk synth
 ```

@@ -51,7 +51,7 @@ repository; this one builds the platform that several teams deploy into.
 | # | Step | What you learn |
 |---|------|----------------|
 | [00](00-prerequisites.md) | Prerequisites | Tools, bootstrap, the GitHub connection |
-| [01](01-init-project.md) | Initialise the project | `cdk init`, uv, black |
+| [01](01-init-project.md) | Initialise the project | `cdk init`, uv, project layout |
 | [02](02-cdk-pipeline.md) | `CdkPipeline` | CodePipeline V2, branch vs tag triggers, forcing re-runs |
 | [03](03-trust-store.md) | `TrustStore` | Custom resources, rotation via logical id, versioned S3 |
 | [04](04-delegated-zone.md) | `PyconZone` | Subclassing an L2, cross-account zone delegation |
