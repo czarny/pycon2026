@@ -60,35 +60,3 @@ repository; this one builds the platform that several teams deploy into.
 | [06](06-fast-app.md) | `FastApp` | Composing constructs, contracts between repos |
 | [07](07-hono-app.md) | `HonoApp`, assemble and deploy | Wiring, synth, deploy, verify end to end |
 | [08](08-design-notes.md) | Design notes | Why the constructs look the way they do |
-
-## How a step works
-
-Every step from 02 on has the same shape, and the shape is deliberate:
-
-1. **One new construct file, written whole.** You type the finished construct,
-   including the parts nothing calls yet. `Gateway` in step 02 already accepts a
-   hosted zone and a client certificate that nothing produces until steps 03 and
-   05; those branches sit dormant until you pass the argument. A construct that
-   keeps working when a dependency is missing is one you can build and test in
-   isolation — see [08 — Design notes](08-design-notes.md).
-2. **The stack grows by a line or two.** Each step prints
-   [stack.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/stack.py) as it stands at the
-   end of it, so you can always diff against what you have. (Step 04 is the one
-   exception: `CdkPipeline` has no caller until step 06, and the template is
-   unchanged.)
-3. **A verify command.** Usually `cdk synth` plus three lines of Python against
-   the emitted template.
-
-## Ground rules
-
-Four ideas run through every step. They are worth reading now and again at the
-end, when [08 — Design notes](08-design-notes.md) argues for them properly.
-
-* **Everything is a construct.** A class taking `(scope, id, …)` that creates
-  resources under itself. You write one per file, and one per step.
-* **Constructs take constructs, not strings.** `Gateway` takes the client
-  certificate, not its id; `FastApp` takes the `TrustStore`, not its URI.
-* **The stack is the wiring diagram.** By step 07 it is thirty lines that
-  declare no resources at all — five constructs and the edges between them.
-* **Synth after every step.** `cdk synth` is the feedback loop, and it needs no
-  AWS credentials.
