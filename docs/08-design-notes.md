@@ -24,7 +24,7 @@ refactor is never free in CloudFormation.
 ## Pass the construct, not the string it produced
 
 ```python
-FastApp(self, "FastApp", domain=..., trust_store=trust_store)   # not trust_store.uri
+FastApp(self, "FastApp", zone=zone, trust_store=trust_store)   # not zone.zone_name, not trust_store.uri
 ```
 
 * `trust_store: TrustStore` accepts the one right thing; `truststore: str`

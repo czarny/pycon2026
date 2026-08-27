@@ -23,18 +23,8 @@ class Stack(cdk.Stack):
         # Each deployed by its own pipeline, on its own subdomain of the
         # delegated zone, and reachable only through this API — their custom
         # domains accept just the client certificates in our trust store.
-        fast_app = FastApp(
-            self,
-            "FastApp",
-            domain=f"fast.{zone.zone_name}",
-            trust_store=trust_store,
-        )
+        fast_app = FastApp(self, "FastApp", zone=zone, trust_store=trust_store)
         gateway.add_http_proxy("fast", fast_app.url)
 
-        hono_app = HonoApp(
-            self,
-            "HonoApp",
-            domain=f"hono.{zone.zone_name}",
-            trust_store=trust_store,
-        )
+        hono_app = HonoApp(self, "HonoApp", zone=zone, trust_store=trust_store)
         gateway.add_http_proxy("hono", hono_app.url)

@@ -22,7 +22,8 @@ deploys it (a Hono handler on Lambda behind an HTTP API). This construct owns
 neither: it stands up a pipeline that checks the repo out and runs that CDK app,
 handing it the two values only this side knows —
 
-  DOMAIN      the domain the service answers on, in our delegated zone
+  DOMAIN      the domain the service answers on: its subdomain of the
+              delegated zone passed in
   TRUSTSTORE  the S3 URI of the trust store bundle whose client certificates its
               custom domain accepts, so only our API Gateway can reach it
               (taken from the TrustStore construct passed in)
@@ -34,6 +35,7 @@ How the repo is built is likewise its own business: the pipeline runs the
 buildspec.yml at its root.
 """
 
+from aws_cdk import aws_route53 as route53
 from constructs import Construct
 
 from pycon2026.cdk_pipeline import CdkPipeline, SourceCode
@@ -42,9 +44,13 @@ from pycon2026.trust_store import TrustStore
 #: The repo holding the application and its CDK app.
 REPO_OWNER = "czarny"
 REPO_NAME = "hono_app"
+#: The subdomain of the delegated zone the service answers on.
+SUBDOMAIN = "hono"
 
 
 class HonoApp(Construct):
+    #: The domain the service answers on, in the zone passed in.
+    domain: str
     #: Base URL of the deployed service, for mounting behind our API.
     url: str
     pipeline: CdkPipeline
@@ -53,13 +59,14 @@ class HonoApp(Construct):
         self,
         scope: Construct,
         id: str,
-        domain: str,
+        zone: route53.IHostedZone,
         trust_store: TrustStore,
         revision_selector: str = "main",
     ) -> None:
         super().__init__(scope, id)
 
-        self.url = f"https://{domain}"
+        self.domain = f"{SUBDOMAIN}.{zone.zone_name}"
+        self.url = f"https://{self.domain}"
 
         self.pipeline = CdkPipeline(
             self,
@@ -70,7 +77,7 @@ class HonoApp(Construct):
                 revision_selector=revision_selector,
             ),
             environment_variables={
-                "DOMAIN": domain,
+                "DOMAIN": self.domain,
                 "TRUSTSTORE": trust_store.uri,
             },
         )
@@ -86,7 +93,7 @@ Your first instinct will be to collapse the two files into one
   shared abstraction sprouts a flag — and a flag only one caller passes is worse
   than a duplicated file.
 * The duplication that matters is already factored out. Everything structural
-  lives in `CdkPipeline`; what remains is a name, a domain and a contract.
+  lives in `CdkPipeline`; what remains is a name, a subdomain and a contract.
 * Each docstring documents a specific integration with a specific repository. A
   generic construct would have a generic docstring, and that knowledge would go
   somewhere worse.
@@ -122,20 +129,10 @@ class Stack(cdk.Stack):
         # Each deployed by its own pipeline, on its own subdomain of the
         # delegated zone, and reachable only through this API — their custom
         # domains accept just the client certificates in our trust store.
-        fast_app = FastApp(
-            self,
-            "FastApp",
-            domain=f"fast.{zone.zone_name}",
-            trust_store=trust_store,
-        )
+        fast_app = FastApp(self, "FastApp", zone=zone, trust_store=trust_store)
         gateway.add_http_proxy("fast", fast_app.url)
 
-        hono_app = HonoApp(
-            self,
-            "HonoApp",
-            domain=f"hono.{zone.zone_name}",
-            trust_store=trust_store,
-        )
+        hono_app = HonoApp(self, "HonoApp", zone=zone, trust_store=trust_store)
         gateway.add_http_proxy("hono", hono_app.url)
 ```
 
@@ -144,10 +141,10 @@ edges between them. **That is the shape a CDK stack should have.** If your stack
 file grows resource declarations, it is a construct that has not been extracted
 yet.
 
-Read the edges out loud: `zone` supplies its name to `Gateway` and to both
-service domains; `trust_store` supplies the certificate id to `Gateway` and its
-URI to both pipelines; each service supplies its URL back to `Gateway`. Every
-arrow is one argument.
+Read the edges out loud: `zone` goes to `Gateway` and to both services, each
+of which derives its own subdomain of it; `trust_store` supplies the certificate
+id to `Gateway` and its URI to both pipelines; each service supplies its URL back
+to `Gateway`. Every arrow is one argument.
 
 `example.com` stays mounted deliberately: it is the one backend that works
 before any pipeline has run, so it separates "the gateway is broken" from "the
