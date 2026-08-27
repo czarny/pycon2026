@@ -1,6 +1,6 @@
 # 01 — Initialise the project
 
-← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The CdkPipeline construct](02-cdk-pipeline.md) →
+← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The Gateway construct](02-gateway.md) →
 
 **Goal:** an empty CDK Python project, managed by uv, that synthesizes.
 
@@ -94,4 +94,4 @@ CloudFormation ever sees; everything from here on is a program that prints it.
 
 ---
 
-← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The CdkPipeline construct](02-cdk-pipeline.md) →
+← [00 — Prerequisites](00-prerequisites.md)  ·  [02 — The Gateway construct](02-gateway.md) →

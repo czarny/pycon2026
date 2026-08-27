@@ -61,7 +61,7 @@ def handler(event, context):
 
 class TrustStore(Construct):
     #: The certificate API Gateway presents to backends, verified against the bundle.
-    client_certificate_id: str
+    client_certificate: apigateway.CfnClientCertificate
     #: Bucket, key and object version as one string:
     #: s3://<bucket>/<key>?versionId=<version>. The s3:// scheme has no version
     #: component of its own, so this borrows the S3 REST API's `versionId` query
@@ -74,12 +74,11 @@ class TrustStore(Construct):
         now = datetime.datetime.now(datetime.timezone.utc)
         rotation_suffix = f"{now.year}H{1 if now.month <= 6 else 2}"
 
-        client_certificate = apigateway.CfnClientCertificate(
+        self.client_certificate = apigateway.CfnClientCertificate(
             self,
             f"ClientCertificate{rotation_suffix}",
             description=f"{self.node.path} client certificate {rotation_suffix}",
         )
-        self.client_certificate_id = client_certificate.ref
 
         bucket = s3.Bucket(
             self,
@@ -121,7 +120,7 @@ class TrustStore(Construct):
             "Bundle",
             service_token=provider.service_token,
             properties={
-                "ClientCertificateId": self.client_certificate_id,
+                "ClientCertificateId": self.client_certificate.ref,
                 "Bucket": bucket.bucket_name,
                 "Key": TRUST_STORE_KEY,
             },

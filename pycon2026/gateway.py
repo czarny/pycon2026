@@ -1,9 +1,8 @@
 """A REST API that can authenticate itself to its HTTP backends with a client certificate.
 
-Backends are mounted with `add_http_proxy`. When a trust store is passed in,
-every request API Gateway forwards to one carries that trust store's client
-certificate, so the backend can verify the caller by checking it against the
-trust store bundle.
+Backends are mounted with `add_http_proxy`. When a client certificate is passed
+in, every request API Gateway forwards to one carries it, so the backend can
+verify the caller by checking it against a trust store holding that certificate.
 
 When a hosted zone is passed in, the API is served from that zone's domain
 name, with a DNS-validated certificate and an alias record pointing at it;
@@ -18,8 +17,6 @@ from aws_cdk import (
 )
 from constructs import Construct
 
-from pycon2026.trust_store import TrustStore
-
 
 class Gateway(Construct):
     rest_api: apigateway.RestApi
@@ -29,7 +26,7 @@ class Gateway(Construct):
         scope: Construct,
         id: str,
         zone: route53.IHostedZone | None = None,
-        trust_store: TrustStore | None = None,
+        client_certificate: apigateway.CfnClientCertificate | None = None,
     ) -> None:
         super().__init__(scope, id)
 
@@ -41,7 +38,7 @@ class Gateway(Construct):
             endpoint_types=[apigateway.EndpointType.REGIONAL],
             deploy_options=apigateway.StageOptions(
                 # Presented to every backend on integration requests.
-                client_certificate_id=(trust_store.client_certificate_id if trust_store else None),
+                client_certificate_id=(client_certificate.ref if client_certificate else None),
             ),
         )
 

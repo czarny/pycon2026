@@ -1,15 +1,16 @@
 # 08 — Design notes
 
-← [07 — Assemble and deploy](07-assemble-and-deploy.md)  ·  [Index](README.md) →
+← [07 — The HonoApp service, assemble and deploy](07-hono-app.md)  ·  [Index](README.md) →
 
 Why the constructs look the way they do. Each note is a decision you can carry
 back to your own CDK codebase.
 
 ## Move shared state up, out of the thing that used it first
 
-`TrustStore` is created in the stack and injected into `Gateway`, not created
-inside `Gateway` and exposed as an attribute. It is not part of the API — it is
-a *peer* the API and both services share.
+`TrustStore` is created in the stack and its parts handed to the constructs that
+need them — the client certificate to `Gateway`, the whole trust store to both
+services — not created inside `Gateway` and exposed as an attribute. It is not
+part of the API; it is a *peer* the API and both services share.
 
 **The rule:** when a second consumer appears for something a construct owns
 privately, move it up to the nearest common scope. Do not add an accessor; that
@@ -38,6 +39,12 @@ FastApp(self, "FastApp", domain=..., trust_store=trust_store)   # not trust_stor
 the last possible moment. Same instinct as `bucket.grant_read(fn)` over
 hand-written ARNs.
 
+`Gateway` takes `trust_store.client_certificate` rather than the whole trust
+store, and that is the same rule, not an exception to it: the certificate is
+itself a construct, and it is *all* the API needs. Taking less than the caller
+holds is how `gateway.py` ends up importing nothing from `trust_store.py` —
+worth the reach when it buys a construct that drops into any other stack.
+
 ## Delete flexibility nobody uses
 
 `PyconZone` hard-codes its parent zone in three module constants. An earlier
@@ -54,9 +61,12 @@ not cheap at all.
 
 ## …but make optional what genuinely has two cases
 
-`Gateway`'s `zone` and `trust_store` are both optional, so
+`Gateway`'s `zone` and `client_certificate` are both optional, so
 `Gateway(self, "Gateway")` is a working API on its `execute-api` URL. That case
-is real — a unit test, a scratch API, a stack with no zone to delegate.
+is real — a unit test, a scratch API, a stack with no zone to delegate. It is
+also step 02, where the construct is written whole and deployed on its own
+before either dependency exists — which is what lets the workshop build it
+first.
 
 The test distinguishing this from the note above is simply: **does the other
 case exist?** And the optionality must be honest — each missing dependency
@@ -82,31 +92,6 @@ explaining why tag values are hashed and base64-encoded, and the note in
 its constraint — information nowhere in the code, that the next person would
 otherwise "simplify" away.
 
-## Review checklist
-
-- [ ] Does the stack file read as a wiring diagram, or does it declare resources?
-- [ ] Does every construct take **constructs** rather than the strings they produce?
-- [ ] Is anything created inside a construct that a second consumer now needs?
-- [ ] Does every parameter have at least two real values across the codebase?
-- [ ] Does every optional parameter leave the construct **working** when omitted?
-- [ ] Are open-ended collections added by a method (`add_*`) rather than a list
-      parameter?
-- [ ] Are permissions written with `grant_*` rather than hand-rolled policies?
-- [ ] Would renaming this construct move a logical id — and have you checked what
-      that replaces on the next deploy?
-
-## Where to go next
-
-* **Multiple environments.** One `Stack` per environment in
-  [app.py](https://github.com/czarny/pycon2026/blob/main/app.py), with different `env=` and `record_name=`.
-* **Tests with real assertions.** [tests/unit/test_stack.py](https://github.com/czarny/pycon2026/blob/main/tests/unit/test_stack.py)
-  synthesizes and asserts nothing. `assertions.Template` has
-  `has_resource_properties`, `resource_count_is` and `find_resources` — assert
-  the mTLS wiring so it cannot silently regress.
-* **`cdk.Aspects`** to enforce the checklist mechanically.
-* **Publish your constructs.** `TrustStore` and `CdkPipeline` are useful beyond
-  this repo.
-
 ---
 
-← [07 — Assemble and deploy](07-assemble-and-deploy.md)  ·  [Index](README.md) →
+← [07 — The HonoApp service, assemble and deploy](07-hono-app.md)  ·  [Index](README.md) →

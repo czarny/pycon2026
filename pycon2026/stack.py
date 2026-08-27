@@ -17,7 +17,7 @@ class Stack(cdk.Stack):
 
         trust_store = TrustStore(self, "TrustStore")
 
-        gateway = Gateway(self, "Gateway", zone, trust_store=trust_store)
+        gateway = Gateway(self, "Gateway", zone, client_certificate=trust_store.client_certificate)
         gateway.add_http_proxy("example", "https://example.com")
 
         # Each deployed by its own pipeline, on its own subdomain of the

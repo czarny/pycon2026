@@ -67,13 +67,13 @@ $ npx cdk bootstrap aws://<account-id>/<region>
 
 ### The parent hosted zone
 
-Step 04 delegates a subdomain of `pycon.foo`, which lives in another account.
+Step 03 delegates a subdomain of `pycon.foo`, which lives in another account.
 That account holds a role named `CrossAccountZoneDelegationRole` your account
 may assume in order to write the NS record.
 
 ### The GitHub connection
 
-Step 02's pipelines pull source through an AWS **CodeConnections** connection.
+The pipelines you write in step 04 pull source through an AWS **CodeConnections** connection.
 Creating one needs a browser handshake, so it is done once, out of band, and its
 ARN stored in SSM:
 
