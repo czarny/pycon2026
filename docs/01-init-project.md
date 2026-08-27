@@ -83,7 +83,6 @@ alone, since that is the CloudFormation stack name.
 ## 1.4 Verify
 
 ```
-$ uv run pytest
 $ npx cdk synth
 ```
 
