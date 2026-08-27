@@ -7,26 +7,59 @@
 | Tool | Install |
 |------|---------|
 | [uv](https://docs.astral.sh/uv/) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` |
-| Node.js 18+ | [nodejs.org](https://nodejs.org) |
+| Node.js 24+ | [nodejs.org](https://nodejs.org) |
 | AWS CDK CLI | `npm install -g aws-cdk` — or prefix every command with `npx cdk` |
 | AWS CLI v2 | [docs](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) |
-
-The package is named `aws-cdk`; the command it installs is `cdk`. AWS also
-publishes `cdk` as an alias package, which is what `npx cdk` fetches — same
-version, same binary.
 
 uv installs Python 3.12 for you. Check everything:
 
 ```
 $ uv --version
 $ npx cdk --version
-$ aws sts get-caller-identity
 ```
 
 ## AWS
 
-Steps 01–06 only synthesize CloudFormation and need no credentials. Step 07
-deploys, and needs an account that has been bootstrapped:
+You need working credentials for AWS account. Set up the profile below before you start 01.
+
+### The SSO profile
+
+The workshop account is reached through IAM Identity Center. Add both blocks
+below to `~/.aws/config` — the profile names the account and role, the
+`sso-session` names the portal they are requested from:
+
+```ini
+[profile pycon]
+sso_session = pycon
+sso_account_id = 790870651433
+sso_role_name = iac-devops-participant
+region = eu-central-1
+
+[sso-session pycon]
+sso_start_url = https://identitycenter.amazonaws.com/ssoins-6987380982a29c24
+sso_region = eu-central-1
+sso_registration_scopes = sso:account:access
+```
+
+Then log in — a browser opens for you to approve the request:
+
+```
+$ aws sso login --profile pycon
+$ aws sts get-caller-identity --profile pycon
+```
+
+Export the profile once per shell so the AWS CLI and the CDK CLI both pick it
+up, rather than passing `--profile` to every command:
+
+```
+$ export AWS_PROFILE=pycon
+```
+
+The session is short-lived. When a command starts failing with an expired-token
+error, run `aws sso login` again.
+
+The account has already been bootstrapped. Outside the workshop, do it
+yourself once per account and region:
 
 ```
 $ npx cdk bootstrap aws://<account-id>/<region>
@@ -36,12 +69,7 @@ $ npx cdk bootstrap aws://<account-id>/<region>
 
 Step 04 delegates a subdomain of `pycon.foo`, which lives in another account.
 That account holds a role named `CrossAccountZoneDelegationRole` your account
-may assume in order to write the NS record. The instructor confirms your account
-is on its trust policy.
-
-Outside the workshop, change the three constants at the top of
-[pycon2026/pycon_zone.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/pycon_zone.py) to a zone you own — or
-skip the zone entirely, since `Gateway` works without one.
+may assume in order to write the NS record.
 
 ### The GitHub connection
 
@@ -51,21 +79,15 @@ ARN stored in SSM:
 
 ```
 $ aws codeconnections create-connection \
-      --provider-type GitHub --connection-name github-<you>
+      --provider-type GitHub --connection-name github-czarny
 # then authorise it in the console: Developer Tools → Settings → Connections
 
-$ aws ssm put-parameter --name /codestar-connection/github-<you> --type String \
+$ aws ssm put-parameter --name /codestar-connection/github-czarny --type String \
       --value arn:aws:codeconnections:<region>:<account>:connection/<uuid>
 ```
 
 The parameter name is `CONNECTION_ARN_PARAMETER` in
-[pycon2026/cdk_pipeline.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/cdk_pipeline.py). A connection left
-`PENDING` never completes a pipeline run.
-
-### Your own name
-
-Replace `czarny` throughout with your own identifier. It becomes your subdomain
-(`<you>.pycon.foo`) and your GitHub org for the two service repositories.
+[pycon2026/cdk_pipeline.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/cdk_pipeline.py). 
 
 ---
 
