@@ -26,5 +26,5 @@ class Stack(cdk.Stack):
         fast_app = FastApp(self, "FastApp", zone=zone, trust_store=trust_store)
         gateway.add_http_proxy("fast", fast_app.url)
 
-        hono_app = HonoApp(self, "HonoApp", zone=zone, trust_store=trust_store)
+        hono_app = HonoApp(self, "HonoApp", zone=zone, trust_store=trust_store, label=self.stack_name)
         gateway.add_http_proxy("hono", hono_app.url)
