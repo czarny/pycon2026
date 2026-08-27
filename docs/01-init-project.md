@@ -15,9 +15,9 @@ $ npx aws-cdk init app --language python
 
 Two generated files carry the wiring:
 
-* **[app.py](../app.py)** constructs `cdk.App()`, instantiates the stack on it,
+* **[app.py](https://github.com/czarny/pycon2026/blob/main/app.py)** constructs `cdk.App()`, instantiates the stack on it,
   and calls `app.synth()`. Everything hangs off that one tree.
-* **[cdk.json](../cdk.json)** holds `"app"` — the command the CLI runs to produce
+* **[cdk.json](https://github.com/czarny/pycon2026/blob/main/cdk.json)** holds `"app"` — the command the CLI runs to produce
   the tree — and a block of **feature flags**, each opting into a behaviour
   change that would otherwise break existing stacks. Leave them alone.
 
@@ -82,7 +82,7 @@ class Stack(cdk.Stack):
 
 The generated names were `pycon2026_stack.py` / `Pycon2026Stack`; the module
 path already says `pycon2026`, so this repo renames both. Keep
-[app.py](../app.py) in sync — but leave the *construct id* `"Pycon2026Stack"`
+[app.py](https://github.com/czarny/pycon2026/blob/main/app.py) in sync — but leave the *construct id* `"Pycon2026Stack"`
 alone, since that is the CloudFormation stack name.
 
 ## 1.4 Verify

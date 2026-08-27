@@ -34,7 +34,7 @@ may assume in order to write the NS record. The instructor confirms your account
 is on its trust policy.
 
 Outside the workshop, change the three constants at the top of
-[pycon2026/pycon_zone.py](../pycon2026/pycon_zone.py) to a zone you own — or
+[pycon2026/pycon_zone.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/pycon_zone.py) to a zone you own — or
 skip the zone entirely, since `Gateway` works without one.
 
 ### The GitHub connection
@@ -53,7 +53,7 @@ $ aws ssm put-parameter --name /codestar-connection/github-<you> --type String \
 ```
 
 The parameter name is `CONNECTION_ARN_PARAMETER` in
-[pycon2026/cdk_pipeline.py](../pycon2026/cdk_pipeline.py). A connection left
+[pycon2026/cdk_pipeline.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/cdk_pipeline.py). A connection left
 `PENDING` never completes a pipeline run.
 
 ### Your own name

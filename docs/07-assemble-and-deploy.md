@@ -3,7 +3,7 @@
 **Goal:** wire the five constructs into one stack, synthesize it, deploy it, and
 prove it works end to end.
 
-**File:** [pycon2026/stack.py](../pycon2026/stack.py)
+**File:** [pycon2026/stack.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/stack.py)
 
 ## 7.1 The wiring diagram
 

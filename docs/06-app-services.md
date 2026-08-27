@@ -4,8 +4,8 @@
 *different repository's* CDK app, handed the domain and the trust store from
 this side.
 
-**Files:** [pycon2026/fast_app.py](../pycon2026/fast_app.py),
-[pycon2026/hono_app.py](../pycon2026/hono_app.py)
+**Files:** [pycon2026/fast_app.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/fast_app.py),
+[pycon2026/hono_app.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/hono_app.py)
 
 ## The idea
 

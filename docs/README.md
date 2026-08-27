@@ -55,9 +55,9 @@ client certificates from.
 ## Ground rules
 
 * **Everything is a construct.** A class taking `(scope, id, …)` that creates
-  resources under itself. Files in [pycon2026/](../pycon2026/) are one each.
+  resources under itself. Files in [pycon2026/](https://github.com/czarny/pycon2026/tree/main/pycon2026/) are one each.
 * **Constructs take constructs, not strings.** `Gateway` takes a `TrustStore`,
   not a certificate id.
-* **The stack is the wiring diagram.** [pycon2026/stack.py](../pycon2026/stack.py)
+* **The stack is the wiring diagram.** [pycon2026/stack.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/stack.py)
   is 30 lines and tells you the whole architecture.
 * **Synth after every step.** You need no AWS credentials until step 07.

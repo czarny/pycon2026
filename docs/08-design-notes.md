@@ -96,8 +96,8 @@ otherwise "simplify" away.
 ## Where to go next
 
 * **Multiple environments.** One `Stack` per environment in
-  [app.py](../app.py), with different `env=` and `record_name=`.
-* **Tests with real assertions.** [tests/unit/test_stack.py](../tests/unit/test_stack.py)
+  [app.py](https://github.com/czarny/pycon2026/blob/main/app.py), with different `env=` and `record_name=`.
+* **Tests with real assertions.** [tests/unit/test_stack.py](https://github.com/czarny/pycon2026/blob/main/tests/unit/test_stack.py)
   synthesizes and asserts nothing. `assertions.Template` has
   `has_resource_properties`, `resource_count_is` and `find_resources` — assert
   the mTLS wiring so it cannot silently regress.

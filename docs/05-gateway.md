@@ -4,7 +4,7 @@
 alias record, that proxies paths to HTTP backends and authenticates itself to
 them with the trust store's client certificate.
 
-**File:** [pycon2026/gateway.py](../pycon2026/gateway.py)
+**File:** [pycon2026/gateway.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/gateway.py)
 
 ## 5.1 The REST API
 

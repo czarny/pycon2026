@@ -3,7 +3,7 @@
 **Goal:** own `<you>.pycon.foo` in your account, with the NS delegation written
 into the parent zone — in a different account — as part of the deploy.
 
-**File:** [pycon2026/pycon_zone.py](../pycon2026/pycon_zone.py)
+**File:** [pycon2026/pycon_zone.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/pycon_zone.py)
 
 ## The problem
 
@@ -74,7 +74,7 @@ step 03, you know exactly what it is doing.
 
 ## 4.3 Use it
 
-In [pycon2026/stack.py](../pycon2026/stack.py):
+In [pycon2026/stack.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/stack.py):
 
 ```python
 zone = PyconZone(self, "DelegatedZone", record_name="czarny")

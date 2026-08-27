@@ -4,7 +4,7 @@
 that backend services point their mTLS trust store at — and that rotates itself
 every six months.
 
-**File:** [pycon2026/trust_store.py](../pycon2026/trust_store.py)
+**File:** [pycon2026/trust_store.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/trust_store.py)
 
 ## The problem
 

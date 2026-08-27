@@ -3,7 +3,7 @@
 **Goal:** a reusable construct that stands up a CodePipeline which checks out a
 GitHub repository and deploys it with a single `cdk deploy` CodeBuild stage.
 
-**File:** [pycon2026/cdk_pipeline.py](../pycon2026/cdk_pipeline.py)
+**File:** [pycon2026/cdk_pipeline.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/cdk_pipeline.py)
 
 ## Why not `aws_cdk.pipelines`?
 

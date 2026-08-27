@@ -1,0 +1,7 @@
+title: CDK Python Workshop
+description: Building a multi-service AWS platform with CDK
+theme: jekyll-theme-cayman
+
+# The docs are the site; nothing else in this folder should be published.
+exclude:
+  - _config.yml
