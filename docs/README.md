@@ -1,7 +1,12 @@
 # Workshop: a multi-service AWS platform with CDK in Python
 
-This repository is the finished outcome of the workshop. These documents walk
-through building it, one construct at a time. Work through them in order.
+A hands-on workshop in building real infrastructure with the AWS CDK. Over nine
+steps you write five constructs and wire them into a single stack, one construct
+at a time. Work through them in order — each step builds on the last, and each
+ends with a command that proves what you just wrote.
+
+You need no CDK experience. You do need an AWS account for the final step; the
+first seven need nothing but Python and Node.
 
 ## What you build
 
@@ -32,11 +37,14 @@ the delivery pipelines for two independently developed services.
                         env: DOMAIN, TRUSTSTORE
 ```
 
-The two services (`fast_app`, `hono_app`) live in their own repositories with
-their own CDK apps. This stack does not deploy them — it deploys *the pipelines
-that deploy them*, handing each pipeline the two values only this side knows:
-the domain the service answers on, and the trust store bundle it must accept
-client certificates from.
+The two services (`fast_app`, `hono_app`) are somebody else's code: each lives
+in its own repository with its own CDK app. Your stack does not deploy them — it
+deploys *the pipelines that deploy them*, handing each pipeline the two values
+only your side knows: the domain the service answers on, and the trust store
+bundle it must accept client certificates from.
+
+That split is the point of the workshop. Most CDK tutorials build one app in one
+repository; this one builds the platform that several teams deploy into.
 
 ## Steps
 
@@ -54,10 +62,14 @@ client certificates from.
 
 ## Ground rules
 
+Four ideas run through every step. They are worth reading now and again at the
+end, when [08 — Design notes](08-design-notes.md) argues for them properly.
+
 * **Everything is a construct.** A class taking `(scope, id, …)` that creates
-  resources under itself. Files in [pycon2026/](https://github.com/czarny/pycon2026/tree/main/pycon2026/) are one each.
+  resources under itself. You write one per file, and one per step.
 * **Constructs take constructs, not strings.** `Gateway` takes a `TrustStore`,
   not a certificate id.
-* **The stack is the wiring diagram.** [pycon2026/stack.py](https://github.com/czarny/pycon2026/blob/main/pycon2026/stack.py)
-  is 30 lines and tells you the whole architecture.
-* **Synth after every step.** You need no AWS credentials until step 07.
+* **The stack is the wiring diagram.** By step 07 it is thirty lines that
+  declare no resources at all — five constructs and the edges between them.
+* **Synth after every step.** `cdk synth` is the feedback loop, and it needs no
+  AWS credentials.
