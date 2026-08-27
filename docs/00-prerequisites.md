@@ -18,9 +18,17 @@ $ uv --version
 $ npx cdk --version
 ```
 
+## Slack
+
+Join the workshop Slack before anything else — the AWS sign-in details are
+shared there, not in this repository:
+
+**[join.slack.com/t/pyconworld](https://join.slack.com/t/pyconworld/shared_invite/zt-47r9gilo5-qLLp_Xj0zJxN6OEDABchYg)**
+
 ## AWS
 
-You need working credentials for AWS account. Set up the profile below before you start 01.
+You need working credentials for AWS account. Your username and one-time
+password arrive in Slack. Set up the profile below before you start 01.
 
 ### The SSO profile
 
