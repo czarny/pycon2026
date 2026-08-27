@@ -47,6 +47,17 @@ bundle it must accept client certificates from.
 That split is the point of the workshop. Most CDK tutorials build one app in one
 repository; this one builds the platform that several teams deploy into.
 
+## Theoretical introduction
+
+Three short chapters of context, in Polish. Optional — the steps stand on their
+own — but they answer the "why" questions the steps take for granted.
+
+| # | Chapter | What it covers |
+|---|---------|----------------|
+| [01](intro/01-wprowadzenie-do-cdk.md) | Wprowadzenie do AWS CDK | Why CDK, App → Stack → Construct, `synth` and `deploy` |
+| [02](intro/02-serwis.md) | Serwis | What a service is here, and the contract it has with your stack |
+| [03](intro/03-vpc-czy-mtls.md) | Mikroserwisy: VPC czy mTLS? | Why this workshop uses mTLS instead of a VPC |
+
 ## Steps
 
 | # | Step | What you learn |
