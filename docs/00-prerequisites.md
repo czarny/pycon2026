@@ -1,3 +1,5 @@
+![PyCon](images/pycon.png)
+
 # 00 — Prerequisites
 
 ← [Index](README.md)  ·  [01 — Initialise the project](01-init-project.md) →
